@@ -1,0 +1,27 @@
+Le chaivi si generano con la seguente funzione:
+	
+    key_pair = RSA.generate(2048) ---> 2048 è la grandezza della chiave in bit
+	private_key = key_pair.export_key()---> è la chiave privata ed è la chiave che si 
+						utilizza per cifrare i messaggi							
+	public_key = key_pair.publickey() ---> è la chiave pubblica ed è la chiave che si \	
+						scambia per decifrare i messaggi 
+
+Per cifrare un messaggio per un collega è necessario importare la chiave pubblica del collega con la funzione:
+	public_key = RSA.import_key(sPub)--> sPub è la chiave pubblica da importare
+		
+
+poi utilizzare la seguente funzione dove pub_key è la chiave pubblica del collega e message è il messaggio da cifrare:
+	
+	def encrypt_message(message, pub_key):
+    		cipher = PKCS1_OAEP.new(pub_key)
+    		encrypted_message = cipher.encrypt(message.encode("utf-8"))
+    		return base64.b64encode(encrypted_message).decode("utf-8") ---> base64 è il tipo di codifica
+
+Per decifrare un messaggio da un collega si deve utilizzare la propria 
+chiave privata--> priv_key
+e il messaggio da decifrare con la seguente funzione:
+	
+	def decrypt_message(encrypted_message, priv_key):
+    		cipher = PKCS1_OAEP.new(priv_key)
+    		decrypted_message = cipher.decrypt(base64.b64decode(encrypted_message))
+    		return decrypted_message.decode("utf-8")
